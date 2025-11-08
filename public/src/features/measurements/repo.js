@@ -19,23 +19,19 @@ export const add = async (entry) => {
   return entry;
 };
 
-export const latestBp = async (limit = 20) => {
+export const latestByType = async (type, limit = 20) => {
   const t = await tx(STORE, "readonly");
   const idx = t.objectStore(STORE).index("by_ts");
   const results = [];
-  const dir = "prev";
 
   await new Promise((res, rej) => {
-    const req = idx.openCursor(null, dir);
+    const req = idx.openCursor(null, "prev");
     req.onsuccess = () => {
       const cur = req.result;
-
-      if (!cur || results.length >= limit) return res();
-
+      if (!cur) return res();
       const v = cur.value;
-
-      if (v.type === "bp") results.push(v);
-
+      if (v.type === type) results.push(v);
+      if (results.length >= limit) return res();
       cur.continue();
     };
     req.onerror = () => rej(req.error);

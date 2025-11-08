@@ -1,4 +1,4 @@
-import { newBloodPressure } from "./model.js";
+import { newBloodPressure, newWeight } from "./model.js";
 import * as repo from "./repo.js";
 
 export const toTimestamp = (date, time) => {
@@ -21,6 +21,17 @@ export const addBp = async ({ sys, dia, date, time, note }) => {
   return repo.add(entry);
 };
 
-export const getBp = (limit = 20) => {
-  return repo.latestBp(limit);
+export const addWeight = async ({ kg, date, time, note }) => {
+  const ts = toTimestamp(date, time);
+  const entry = newWeight({ kg, ts, note });
+
+  return repo.add(entry);
+};
+
+export const getBpList = (limit = 20) => {
+  return repo.latestByType("bp", limit);
+};
+
+export const getWeightList = (limit = 20) => {
+  return repo.latestByType("weight", limit);
 };

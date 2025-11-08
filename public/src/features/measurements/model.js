@@ -11,8 +11,18 @@ export const validateBloodPreassure = (e) => {
   return e;
 };
 
+export const validateWeight = (e) => {
+  if (e.type !== "weight") throw new Error("Nieprawidłowy typ pomiaru");
+  if (!Number.isFinite(e.value)) throw new Error("Podaj poprawną wartość wagi");
+  if (e.value <= 0 || e.value > 500)
+    throw new Error("Waga poza zakresem (1 - 500)kg");
+  if (!Number.isFinite(e.ts)) throw new Error("Nieprawidłowa Data");
+
+  return e;
+};
+
 export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "" }) => {
-  const e = {
+  const result = {
     id: crypto.randomUUID
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random()}`,
@@ -23,5 +33,19 @@ export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "" }) => {
     note: `${note}`,
   };
 
-  return validateBloodPreassure(e);
+  return validateBloodPreassure(result);
+};
+
+export const newWeight = ({ kg, ts = Date.now(), note = "" }) => {
+  const result = {
+    id: crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random()}`,
+    type: "weight",
+    value: +kg,
+    ts: +ts,
+    note: `${note}`,
+  };
+
+  return validateWeight(result);
 };
