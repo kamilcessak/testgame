@@ -1,4 +1,4 @@
-import { tx } from "../../core/database";
+import { tx } from "../../core/database.js";
 
 const STORE = "measurements";
 
@@ -20,7 +20,7 @@ export const add = async (entry) => {
 };
 
 export const latestBp = async (limit = 20) => {
-  const t = await ts(STORE, "readonly");
+  const t = await tx(STORE, "readonly");
   const idx = t.objectStore(STORE).index("by_ts");
   const results = [];
   const dir = "prev";
@@ -34,7 +34,7 @@ export const latestBp = async (limit = 20) => {
 
       const v = cur.value;
 
-      if (v.typ === "bp") results.push(v);
+      if (v.type === "bp") results.push(v);
 
       cur.continue();
     };

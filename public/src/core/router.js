@@ -23,7 +23,12 @@ export const startRouter = () => {
   };
 
   addEventListener("hashchange", render);
-  addEventListener("load", render);
+
+  if (document.readyState === "loading") {
+    addEventListener("DOMContentLoaded", render);
+  } else {
+    render();
+  }
 };
 
 export const setActiveLink = () => {
