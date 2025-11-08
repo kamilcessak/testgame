@@ -61,3 +61,42 @@ main {
     gap: 1rem;
   }
 }
+
+/* MEASUREMENTS CSS */
+
+#bp-form, #weight-form{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+#bp-form button, #weight-form button{
+  background-color: #6497b1;
+  border: 0px;
+  padding: 8px;
+  color: white;
+  font-weight: 600;
+}
+
+.measurementsWrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.measurementsFormWrapper{
+  display: flex;
+  flex: 3;
+  flex-direction: column;
+}
+
+.measurementsListWrapper{
+  display: flex;
+  flex: 4;
+  flex-direction: column;
+}
+
+/* END MEASUREMENTS CSS */
