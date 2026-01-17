@@ -4,11 +4,16 @@ export const database = async () => {
   if (_database) return _database;
 
   _database = await new Promise((res, rej) => {
-    const req = indexedDB.open("healthDB", 1);
+    const req = indexedDB.open("healthDB", 2);
     req.onupgradeneeded = () => {
       const d = req.result;
       if (!d.objectStoreNames.contains("measurements")) {
         const s = d.createObjectStore("measurements", { keyPath: "id" });
+        s.createIndex("by_ts", "ts", { unique: false });
+        s.createIndex("by_type", "type", { unique: false });
+      }
+      if (!d.objectStoreNames.contains("meals")) {
+        const s = d.createObjectStore("meals", { keyPath: "id" });
         s.createIndex("by_ts", "ts", { unique: false });
         s.createIndex("by_type", "type", { unique: false });
       }

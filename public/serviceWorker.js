@@ -1,4 +1,4 @@
-const CACHE = "perfecthealth-cache-v5";
+const CACHE = "perfecthealth-cache-v7";
 const APP_SHELL = [
   "index.html",
   "styles.css",

@@ -21,6 +21,12 @@ const MeasurementsView = async () => {
               <label>Godzina pomiaru
                   <input name="time" type="time" />
               </label>
+              <label>Lokalizacja
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                      <input name="location" type="text" placeholder="Opcjonalna..." style="flex: 1;" />
+                      <button type="button" id="get-location-btn">📍 Pobierz</button>
+                  </div>
+              </label>
               <label>Notatka
                   <input name="note" type="text" placeholder="Opcjonalna..." />
               </label>
@@ -66,10 +72,91 @@ const MeasurementsView = async () => {
   const bpForm = root.querySelector("#bp-form");
   const bpMsg = root.querySelector("#bp-msg");
   const bpList = root.querySelector("#bp-list");
+  const locationInput = root.querySelector('input[name="location"]');
+  const getLocationBtn = root.querySelector("#get-location-btn");
 
   const wgForm = root.querySelector("#weight-form");
   const wgMsg = root.querySelector("#weight-msg");
   const wgList = root.querySelector("#weight-list");
+
+  // Funkcja do pobierania lokalizacji
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      bpMsg.style.color = "#c00";
+      bpMsg.textContent =
+        "Geolokacja nie jest obsługiwana przez twoją przeglądarkę";
+      return;
+    }
+
+    getLocationBtn.disabled = true;
+    getLocationBtn.textContent = "⏳ Pobieranie...";
+    bpMsg.textContent = "";
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            const address = data.address;
+            let locationStr = "";
+
+            if (address) {
+              const parts = [];
+              if (address.road) parts.push(address.road);
+              if (address.house_number) parts.push(address.house_number);
+              if (address.city || address.town || address.village) {
+                parts.push(address.city || address.town || address.village);
+              }
+              locationStr =
+                parts.join(", ") ||
+                data.display_name ||
+                `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+            } else {
+              locationStr = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+            }
+
+            locationInput.value = locationStr;
+            getLocationBtn.disabled = false;
+            getLocationBtn.textContent = "📍 Pobierz";
+          } else {
+            // Fallback do współrzędnych
+            locationInput.value = `${latitude.toFixed(6)}, ${longitude.toFixed(
+              6
+            )}`;
+            getLocationBtn.disabled = false;
+            getLocationBtn.textContent = "📍 Pobierz";
+          }
+        } catch (error) {
+          // Fallback do współrzędnych jeśli reverse geocoding nie działa
+          const { latitude, longitude } = position.coords;
+          locationInput.value = `${latitude.toFixed(6)}, ${longitude.toFixed(
+            6
+          )}`;
+          getLocationBtn.disabled = false;
+          getLocationBtn.textContent = "📍 Pobierz";
+        }
+      },
+      (error) => {
+        bpMsg.style.color = "#c00";
+        bpMsg.textContent = `Błąd pobierania lokalizacji: ${error.message}`;
+        getLocationBtn.disabled = false;
+        getLocationBtn.textContent = "📍 Pobierz";
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
+  getLocationBtn.addEventListener("click", getLocation);
 
   bpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -83,6 +170,7 @@ const MeasurementsView = async () => {
         date: fd.get("date"),
         time: fd.get("time"),
         note: fd.get("note"),
+        location: fd.get("location"),
       });
 
       bpForm.reset();
@@ -132,7 +220,10 @@ const MeasurementsView = async () => {
       .map(
         (e) =>
           `<li>${fmtDate(e.ts)} - <strong>${e.value}/${e.value2} mmHg</strong>
-         ${e.note ? ` <em>${escapeHtml(e.note)}</em>` : ""}
+         ${
+           e.location ? ` <br/><small>📍 ${escapeHtml(e.location)}</small>` : ""
+         }
+         ${e.note ? ` <br/><em>${escapeHtml(e.note)}</em>` : ""}
          </li>`
       )
       .join("");

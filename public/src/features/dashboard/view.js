@@ -17,17 +17,21 @@ const DashboardView = async () => {
         <div>
             <h2>Ostatnia waga:</h2>
             <p>
-                <strong>${data.lastWeight.kg} kg</strong>
-                <br/>
-                <small>${new Date(data.lastWeight.ts).toISOString()}</small>
+                ${
+                  data.lastWeight
+                    ? `<strong>${data.lastWeight.kg} kg</strong><br/><small>${new Date(data.lastWeight.ts).toISOString()}</small>`
+                    : "<em>Brak danych</em>"
+                }
             </p>
         </div>
         <div>
             <h2>Ostatni pomiar ciśnienia:</h2>
             <p>
-                <strong>${data.lastBp.sys} / ${data.lastBp.dia} mmHg</strong>
-                <br/>
-                <small>${new Date(data.lastBp.ts).toISOString()}</small>
+                ${
+                  data.lastBp
+                    ? `<strong>${data.lastBp.sys} / ${data.lastBp.dia} mmHg</strong><br/><small>${new Date(data.lastBp.ts).toISOString()}</small>`
+                    : "<em>Brak danych</em>"
+                }
             </p>
         </div>
     </div>

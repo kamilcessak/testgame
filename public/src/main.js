@@ -2,6 +2,7 @@ import { startRouter, setActiveLink } from "./core/router.js";
 
 import "./features/dashboard/routes.js";
 import "./features/measurements/routes.js";
+import "./features/meals/routes.js";
 
 const setupOfflineBanner = () => {
   const banner = document.querySelector("#offline-banner");

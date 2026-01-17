@@ -21,7 +21,7 @@ export const validateWeight = (e) => {
   return e;
 };
 
-export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "" }) => {
+export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "", location = "" }) => {
   const result = {
     id: crypto.randomUUID
       ? crypto.randomUUID()
@@ -31,6 +31,7 @@ export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "" }) => {
     value2: +dia,
     ts: +ts,
     note: `${note}`,
+    location: `${location}`,
   };
 
   return validateBloodPreassure(result);

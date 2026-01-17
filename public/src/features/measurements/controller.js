@@ -14,9 +14,9 @@ export const toTimestamp = (date, time) => {
   return ts;
 };
 
-export const addBp = async ({ sys, dia, date, time, note }) => {
+export const addBp = async ({ sys, dia, date, time, note, location }) => {
   const ts = toTimestamp(date, time);
-  const entry = newBloodPressure({ sys, dia, ts, note });
+  const entry = newBloodPressure({ sys, dia, ts, note, location });
 
   return repo.add(entry);
 };
