@@ -1,9 +1,12 @@
+// Mapa przechowująca zarejestrowane trasy aplikacji
 const routes = new Map();
 
+// Rejestruje trasy w routerze
 export const registerRoute = (path, loader) => {
   routes.set(path, loader);
 };
 
+// Start routera opartego na hash w URL
 export const startRouter = () => {
   const render = async () => {
     const hash = location.hash.replace("#", "") || "/";
@@ -31,6 +34,7 @@ export const startRouter = () => {
   }
 };
 
+// Oznacza aktywny link w nawigacji na podstawie aktualnego hash
 export const setActiveLink = () => {
   const current = location.hash || "#/";
   document.querySelectorAll("a[data-route]").forEach((a) => {
@@ -38,6 +42,7 @@ export const setActiveLink = () => {
   });
 };
 
+// Trasa 404 dla nieistniejących stron
 registerRoute("/404", async () => {
   const el = document.createElement("div");
 

@@ -14,6 +14,7 @@ header {
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  flex-wrap: wrap;
   z-index: 10;
 }
 header h1 {
@@ -25,6 +26,25 @@ nav {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+  header h1 {
+    font-size: 1rem;
+  }
+  nav {
+    width: 100%;
+    gap: 0.5rem;
+  }
+  nav a {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+  }
 }
 nav a {
   color: #fff;
@@ -38,14 +58,36 @@ nav a.active {
 #offline-banner {
   background: #d62d20;
   color: #fff;
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 0.4rem;
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  #offline-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
 }
 main {
   max-width: 960px;
   margin: 1rem auto;
   padding: 0 1rem;
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 0 0.75rem;
+  }
 }
 .card {
   background: #fff;
@@ -53,6 +95,14 @@ main {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   padding: 1rem;
   margin: 0.75rem 0;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+  }
 }
 @media (min-width: 720px) {
   .grid {
@@ -225,3 +275,76 @@ main {
 }
 
 /* END MEALS CSS */
+
+/* RESPONSIVE IMPROVEMENTS */
+
+/* Dashboard and general content */
+section > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  section > div {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* Lists responsive */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+ul li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 480px) {
+  ul li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* Images in lists */
+ul li img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  ul li div[style*="display: flex"] {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  ul li img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 200px !important;
+  }
+}
+
+/* Form inputs on small screens */
+@media (max-width: 480px) {
+  #bp-form input,
+  #weight-form input,
+  #meal-form input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  #get-location-btn {
+    width: 100%;
+    margin-top: 4px;
+  }
+}

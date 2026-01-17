@@ -1,3 +1,4 @@
+// Waliduje dane pomiaru ciśnienia krwi
 export const validateBloodPreassure = (e) => {
   if (e.type !== "bp") throw new Error("Nieprawidłowy typ pomiaru");
   if (!Number.isFinite(e.value) || !Number.isFinite(e.value2))
@@ -11,6 +12,7 @@ export const validateBloodPreassure = (e) => {
   return e;
 };
 
+// Waliduje dane pomiaru wagi
 export const validateWeight = (e) => {
   if (e.type !== "weight") throw new Error("Nieprawidłowy typ pomiaru");
   if (!Number.isFinite(e.value)) throw new Error("Podaj poprawną wartość wagi");
@@ -21,6 +23,7 @@ export const validateWeight = (e) => {
   return e;
 };
 
+// Tworzy nowy obiekt pomiaru ciśnienia krwi z walidacją
 export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "", location = "" }) => {
   const result = {
     id: crypto.randomUUID
@@ -37,6 +40,7 @@ export const newBloodPressure = ({ sys, dia, ts = Date.now(), note = "", locatio
   return validateBloodPreassure(result);
 };
 
+// Tworzy nowy obiekt pomiaru wagi z walidacją
 export const newWeight = ({ kg, ts = Date.now(), note = "" }) => {
   const result = {
     id: crypto.randomUUID

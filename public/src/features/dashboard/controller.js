@@ -1,12 +1,11 @@
 import { latestByType } from "../measurements/repo.js";
 import { getTodayCalories } from "../meals/controller.js";
 
+// Pobiera podsumowanie dzisiejszych danych dla dashboardu
 export const getTodaySummary = async () => {
   const latestWg = await latestByType("weight", 1);
   const latestBp = await latestByType("bp", 1);
   const eatenCalories = await getTodayCalories();
-
-  console.log({ latestWg, latestBp, eatenCalories });
 
   return {
     date: new Date(),

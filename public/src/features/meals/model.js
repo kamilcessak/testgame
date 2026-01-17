@@ -1,3 +1,4 @@
+// Waliduje dane posiłku
 export const validateMeal = (e) => {
   if (e.type !== "meal") throw new Error("Nieprawidłowy typ posiłku");
   if (!Number.isFinite(e.calories) || e.calories <= 0)
@@ -10,6 +11,7 @@ export const validateMeal = (e) => {
   return e;
 };
 
+// Tworzy nowy obiekt posiłku
 export const newMeal = ({
   calories,
   description = "",

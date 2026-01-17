@@ -14,6 +14,7 @@ export const toTimestamp = (date, time) => {
   return ts;
 };
 
+// Dodaje nowy pomiar ciśnienia krwi
 export const addBp = async ({ sys, dia, date, time, note, location }) => {
   const ts = toTimestamp(date, time);
   const entry = newBloodPressure({ sys, dia, ts, note, location });
@@ -21,6 +22,7 @@ export const addBp = async ({ sys, dia, date, time, note, location }) => {
   return repo.add(entry);
 };
 
+// Dodaje nowy pomiar wagi
 export const addWeight = async ({ kg, date, time, note }) => {
   const ts = toTimestamp(date, time);
   const entry = newWeight({ kg, ts, note });
@@ -28,10 +30,12 @@ export const addWeight = async ({ kg, date, time, note }) => {
   return repo.add(entry);
 };
 
+// Pobiera listę pomiarów ciśnienia
 export const getBpList = (limit = 20) => {
   return repo.latestByType("bp", limit);
 };
 
+// Pobiera listę pomiarów wagi
 export const getWeightList = (limit = 20) => {
   return repo.latestByType("weight", limit);
 };

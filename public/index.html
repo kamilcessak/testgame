@@ -7,9 +7,12 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="theme-color" content="#005b96" />
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="icon" href="icons/icon.png" />
-    <link rel="apple-touch-icon" href="icons/icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="PerfectHealth" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.png" />
+    <link rel="apple-touch-icon" href="/icons/icon.png" />
     <link rel="stylesheet" href="styles.css" />
     <title>PerfectHealth</title>
   </head>
@@ -21,7 +24,10 @@
         <a href="#/measurements" data-route>Pomiary</a>
         <a href="#/nutrition" data-route>Żywienie & Trening</a>
       </nav>
-      <div id="offline-banner" hidden>Offline</div>
+      <div id="offline-banner" hidden>
+        <span>📴 Tryb offline</span>
+        <span style="font-size: 0.85em; margin-left: 8px;">Aplikacja działa lokalnie. Dane są zapisywane i będą zsynchronizowane po powrocie połączenia.</span>
+      </div>
     </header>
 
     <main id="app">Ładowanie….</main>

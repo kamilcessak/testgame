@@ -2,6 +2,7 @@ import { tx } from "../../core/database.js";
 
 const STORE = "measurements";
 
+// Dodaje nowy pomiar do bazy danych
 export const add = async (entry) => {
   const t = await tx(STORE, "readwrite");
 
@@ -19,6 +20,7 @@ export const add = async (entry) => {
   return entry;
 };
 
+// Pobiera najnowsze pomiary danego typu (np. "bp" lub "weight")
 export const latestByType = async (type, limit = 20) => {
   const t = await tx(STORE, "readonly");
   const idx = t.objectStore(STORE).index("by_ts");
