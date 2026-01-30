@@ -50,3 +50,8 @@ export const GEOLOCATION_TIMEOUT_MS = 10000;
 export const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
 export const NOMINATIM_MIN_INTERVAL_MS = 1000;
 export const NOMINATIM_USER_AGENT = "PerfectHealth/1.0 (health tracker; contact: local)";
+
+export const MAX_IMAGE_INPUT_SIZE = 10 * 1024 * 1024;
+export const MAX_IMAGE_DIMENSION = 1024;
+export const IMAGE_JPEG_QUALITY = 0.82;
+export const MAX_IMAGE_OUTPUT_SIZE = 800 * 1024;

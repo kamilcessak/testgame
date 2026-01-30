@@ -79,18 +79,29 @@ export const parseDateTime = (date, time) => {
   return ts;
 };
 
-// Maks. rozmiar pliku w bajtach (np. 5MB)
+// Maks. rozmiar pliku wejściowego
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-// Dozwolone typy MIME dla zdjęć
+// Dozwolone typy MIME
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
+// Waliduje plik obrazu: musi być instancją File
 export const assertImageFile = (file, maxSize = MAX_IMAGE_SIZE) => {
-  if (!file || !(file instanceof File)) return null;
+  if (file == null) return null;
+  if (!(file instanceof File)) {
+    throw new Error("Zdjęcie musi być plikiem (nie tekstem ani innym obiektem).");
+  }
+  if (file.size === 0) return null;
+
+  const type = file.type && String(file.type).toLowerCase().trim();
+  if (!type || !ALLOWED_IMAGE_TYPES.includes(type)) {
+    throw new Error("Dozwolone formaty zdjęć: JPG, PNG, WebP, GIF.");
+  }
   if (file.size > maxSize) {
     throw new Error(`Zdjęcie może mieć co najwyżej ${Math.round(maxSize / 1024 / 1024)} MB.`);
   }
-  if (file.type && !ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    throw new Error("Dozwolone formaty zdjęć: JPG, PNG, WebP, GIF.");
-  }
   return file;
 };
+
+export const isValidImageBlob = (value) =>
+  value == null ||
+  (value instanceof Blob && value.type.startsWith("image/"));

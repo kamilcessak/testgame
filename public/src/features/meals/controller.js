@@ -8,7 +8,7 @@ import {
   optionalString,
   assertImageFile,
 } from "../../utils/validation.js";
-import { readFileAsDataURL } from "../../utils/file.js";
+import { resizeImageToBlob } from "../../utils/image.js";
 import {
   CALORIES_MIN,
   CALORIES_MAX,
@@ -17,17 +17,22 @@ import {
   MEAL_TYPE,
   MEALS_TODAY_FETCH_LIMIT,
   DEFAULT_LIST_LIMIT,
+  MAX_IMAGE_INPUT_SIZE,
+  MAX_IMAGE_DIMENSION,
+  IMAGE_JPEG_QUALITY,
 } from "../../constants.js";
 
 export const toTimestamp = (date, time) => parseDateTime(date, time);
 
-// Konwertuje plik obrazu na data URL
-const imageFileToDataURL = async (imageFile) => {
-  if (!imageFile || !(imageFile instanceof File) || imageFile.size === 0) {
-    return null;
-  }
-  assertImageFile(imageFile);
-  return readFileAsDataURL(imageFile);
+// Waliduje plik i kompresuje do Blob
+const imageFileToBlob = async (imageFile) => {
+  if (imageFile == null) return null;
+  const file = assertImageFile(imageFile, MAX_IMAGE_INPUT_SIZE);
+  if (!file) return null;
+  return resizeImageToBlob(file, {
+    maxDimension: MAX_IMAGE_DIMENSION,
+    quality: IMAGE_JPEG_QUALITY,
+  });
 };
 
 // Dodaje nowy posiłek do bazy danych
@@ -54,7 +59,7 @@ export const addMeal = async ({
   const fatsVal = assertNonNegativeNumber(fats ?? 0, "Tłuszcze (g)");
   const ts = parseDateTime(date, time);
   const noteStr = optionalString(note, MAX_NOTE_LENGTH);
-  const imageData = await imageFileToDataURL(imageFile);
+  const imageBlob = await imageFileToBlob(imageFile);
 
   const entry = newMeal({
     calories: caloriesVal,
@@ -62,7 +67,7 @@ export const addMeal = async ({
     protein: proteinVal,
     carbs: carbsVal,
     fats: fatsVal,
-    image: imageData,
+    image: imageBlob,
     ts,
     note: noteStr,
   });

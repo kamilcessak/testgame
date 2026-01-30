@@ -63,6 +63,7 @@ const MealsView = async () => {
   const mealForm = root.querySelector("#meal-form");
   const mealMsg = root.querySelector("#meal-msg");
   const mealList = root.querySelector("#meal-list");
+  const mealListObjectUrls = new Set();
 
   const onMealSubmit = async (e) => {
     e.preventDefault();
@@ -98,9 +99,14 @@ const MealsView = async () => {
 
   const destroy = () => {
     mealForm.removeEventListener("submit", onMealSubmit);
+    mealListObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+    mealListObjectUrls.clear();
   };
 
   const renderMealList = (items, error) => {
+    mealListObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+    mealListObjectUrls.clear();
+
     if (error) {
       const li = document.createElement("li");
       li.className = "list-error";
@@ -114,14 +120,23 @@ const MealsView = async () => {
       mealList.replaceChildren(li);
       return;
     }
-    mealList.innerHTML = items
-      .map((e) => {
-        const imgPart = e.image
-          ? `<img src="${e.image}" alt="${escapeHtml(e.description || "Posiłek")}" class="meal-item-img" />`
-          : "";
-        return safeHtml`<li><div class="meal-item">${trusted(imgPart)}<div class="meal-item-body"><div><strong>${fmtDate(e.ts)}</strong> - <strong>${e.calories} kcal</strong></div><div>${e.description || ""}</div><div class="meal-item-macros">B: ${e.protein.toFixed(1)}g | W: ${e.carbs.toFixed(1)}g | T: ${e.fats.toFixed(1)}g</div><div class="meal-item-note"><em>${e.note || ""}</em></div></div></div></li>`;
-      })
-      .join("");
+
+    const parts = items.map((e) => {
+      let imageUrl = null;
+      if (e.image) {
+        if (e.image instanceof Blob) {
+          imageUrl = URL.createObjectURL(e.image);
+          mealListObjectUrls.add(imageUrl);
+        } else if (typeof e.image === "string" && e.image.startsWith("data:")) {
+          imageUrl = e.image;
+        }
+      }
+      const imgPart = imageUrl
+        ? `<img src="${imageUrl}" alt="${escapeHtml(e.description || "Posiłek")}" class="meal-item-img" />`
+        : "";
+      return safeHtml`<li><div class="meal-item">${trusted(imgPart)}<div class="meal-item-body"><div><strong>${fmtDate(e.ts)}</strong> - <strong>${e.calories} kcal</strong></div><div>${e.description || ""}</div><div class="meal-item-macros">B: ${e.protein.toFixed(1)}g | W: ${e.carbs.toFixed(1)}g | T: ${e.fats.toFixed(1)}g</div><div class="meal-item-note"><em>${e.note || ""}</em></div></div></div></li>`;
+    });
+    mealList.innerHTML = parts.join("");
   };
 
   const refreshMeals = async () => {

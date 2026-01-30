@@ -21,8 +21,15 @@ export const validateMeal = (e) => {
     throw new Error(`Opis może mieć co najwyżej ${MAX_DESCRIPTION_LENGTH} znaków.`);
   if (e.note.length > MAX_NOTE_LENGTH)
     throw new Error(`Notatka może mieć co najwyżej ${MAX_NOTE_LENGTH} znaków.`);
-  if (e.image != null && (typeof e.image !== "string" || !e.image.startsWith("data:")))
-    throw new Error("Nieprawidłowy format zdjęcia.");
+  
+  if (e.image != null) {
+    if (e.image instanceof Blob) {
+      if (!e.image.type.startsWith("image/"))
+        throw new Error("Nieprawidłowy typ zdjęcia (oczekiwano obrazu).");
+    } else if (typeof e.image !== "string" || !e.image.startsWith("data:image/")) {
+      throw new Error("Nieprawidłowy format zdjęcia.");
+    }
+  }
 
   return e;
 };
