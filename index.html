@@ -1,12 +1,47 @@
 <!DOCTYPE html>
 <html lang="pl">
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════════╗
+  ║  PLIK: index.html (główny folder)                                            ║
+  ║  CO ROBI: Przekierowuje użytkownika do właściwej aplikacji w folderze public ║
+  ╚══════════════════════════════════════════════════════════════════════════════╝
+  
+  DLACZEGO TO ISTNIEJE?
+  - Aplikacja właściwa jest w folderze /public/
+  - Ten plik to tylko "przekierowanie" - gdy ktoś otworzy główny folder,
+    zostanie automatycznie przeniesiony do /public/ gdzie jest apka
+  
+  JAK DZIAŁA PRZEKIEROWANIE?
+  1. Meta refresh (linia 15) - HTML mówi przeglądarce "za 0 sekund idź na public/"
+  2. JavaScript (linia 16) - dla pewności robi to samo w JS
+  3. Link tekstowy (linia 21) - gdyby oba powyższe zawiodły, user może kliknąć
+-->
 <head>
+  <!-- Kodowanie znaków - żeby polskie litery się wyświetlały -->
   <meta charset="utf-8" />
+  
+  <!-- 
+    META REFRESH - automatyczne przekierowanie
+    content="0; url=public/" oznacza:
+    - 0 = po 0 sekundach (natychmiast)
+    - url=public/ = przekieruj na folder public/
+  -->
   <meta http-equiv="refresh" content="0; url=public/" />
+  
+  <!-- 
+    JAVASCRIPT REDIRECT - to samo co meta refresh ale w JS
+    location.replace() - zamienia aktualny URL na nowy
+    (replace zamiast assign, żeby nie było "wstecz" do tej strony)
+  -->
   <script>location.replace("public/");</script>
+  
   <title>PerfectHealth</title>
 </head>
 <body>
+  <!-- 
+    FALLBACK - link tekstowy gdyby przekierowanie nie zadziałało
+    (np. wyłączony JavaScript i meta refresh)
+  -->
   <p>Przekierowanie do aplikacji… <a href="public/">Kliknij tutaj</a>, jeśli nie nastąpi automatyczne przekierowanie.</p>
 </body>
 </html>

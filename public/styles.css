@@ -1,128 +1,232 @@
-/* ========== Zmienne (mobile-first) ========== */
+/*
+  ╔══════════════════════════════════════════════════════════════════════════════╗
+  ║  PLIK: styles.css                                                            ║
+  ║  CO ROBI: Definiuje wygląd całej aplikacji (kolory, rozmiary, układ)         ║
+  ╚══════════════════════════════════════════════════════════════════════════════╝
+  
+  PODEJŚCIE: MOBILE-FIRST
+  - Najpierw piszemy style dla telefonów (małe ekrany)
+  - Potem @media (min-width: X) dodaje style dla większych ekranów
+  - Dlaczego? Bo łatwiej "rozszerzać" niż "zmniejszać" design
+  
+  KONWENCJA NAZEWNICTWA: BEM (Block-Element-Modifier)
+  - Block: samodzielny komponent, np. .header, .card
+  - Element: część bloku, np. .header__title, .header__nav
+  - Modifier: wariant, np. .btn--primary, .form-msg-error
+  
+  UŻYCIE ZMIENNYCH CSS:
+  - var(--nazwa) = używa zmiennej zdefiniowanej w :root
+  - Zalety: zmień w jednym miejscu, zmieni się wszędzie
+  - Łatwy "dark mode" (podmień zmienne)
+*/
+
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  ZMIENNE CSS (Custom Properties)
+  Definiujemy "stałe" które używamy w całym CSS
+  :root = cały dokument (najwyższy poziom)
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 :root {
-  /* Kolory */
-  --color-bg: #f7f7f7;
-  --color-text: #011f4b;
-  --color-header-bg: #005b96;
-  --color-header-text: #fff;
-  --color-offline-bg: #d62d20;
-  --color-offline-text: #fff;
-  --color-card-bg: #fff;
-  --color-border: #ddd;
-  --color-border-error: #e0b4b4;
-  --color-error-bg: #fff3f3;
-  --color-error-text: #c00;
-  --color-success: #0a7;
-  --color-btn: #6497b1;
-  --color-btn-text: #fff;
-  --color-muted: #666;
-  --color-muted-light: #888;
-  --color-list-border: #eee;
+  /* 
+    ─────────────────────────────────────────────────────────────────────────────
+    KOLORY
+    Paleta kolorów aplikacji - zmień tutaj żeby zmienić wszędzie
+    ─────────────────────────────────────────────────────────────────────────────
+  */
+  --color-bg: #f7f7f7;              /* Tło strony (jasny szary) */
+  --color-text: #011f4b;            /* Główny kolor tekstu (ciemny granat) */
+  --color-header-bg: #005b96;       /* Tło nagłówka (niebieski) */
+  --color-header-text: #fff;        /* Tekst w nagłówku (biały) */
+  --color-offline-bg: #d62d20;      /* Tło banera offline (czerwony) */
+  --color-offline-text: #fff;       /* Tekst banera offline */
+  --color-card-bg: #fff;            /* Tło kart (biały) */
+  --color-border: #ddd;             /* Kolor ramek (szary) */
+  --color-border-error: #e0b4b4;    /* Ramka błędu (różowy) */
+  --color-error-bg: #fff3f3;        /* Tło błędu (jasny róż) */
+  --color-error-text: #c00;         /* Tekst błędu (czerwony) */
+  --color-success: #0a7;            /* Sukces (zielony) */
+  --color-btn: #6497b1;             /* Kolor przycisków (niebieski) */
+  --color-btn-text: #fff;           /* Tekst przycisków */
+  --color-muted: #666;              /* Tekst drugorzędny (szary) */
+  --color-muted-light: #888;        /* Tekst jeszcze bardziej wyciszony */
+  --color-list-border: #eee;        /* Linie między elementami listy */
 
-  /* Odstępy */
-  --space-xs: 4px;
-  --space-sm: 0.5rem;
-  --space-md: 0.75rem;
-  --space-lg: 1rem;
-  --space-xl: 1.5rem;
+  /* 
+    ─────────────────────────────────────────────────────────────────────────────
+    ODSTĘPY (Spacing)
+    Używamy rem (relative to root font-size) dla spójności
+    ─────────────────────────────────────────────────────────────────────────────
+  */
+  --space-xs: 4px;       /* Extra small: 4px */
+  --space-sm: 0.5rem;    /* Small: 8px (przy 16px base) */
+  --space-md: 0.75rem;   /* Medium: 12px */
+  --space-lg: 1rem;      /* Large: 16px */
+  --space-xl: 1.5rem;    /* Extra large: 24px */
 
-  /* Typografia */
+  /* 
+    ─────────────────────────────────────────────────────────────────────────────
+    TYPOGRAFIA (Czcionki)
+    ─────────────────────────────────────────────────────────────────────────────
+  */
+  /* 
+    Font stack - przeglądarka używa pierwszej dostępnej czcionki:
+    1. system-ui = systemowa czcionka (różna na każdym OS)
+    2. -apple-system = San Francisco na macOS/iOS
+    3. Segoe UI = Windows
+    4. Roboto = Android
+    5. Ubuntu = Ubuntu Linux
+    6. sans-serif = fallback bezszeryfowa
+  */
   --font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
-  --line-height: 1.45;
-  --font-size-base: 1rem;
-  --font-size-sm: 0.9rem;
-  --font-size-xs: 0.85em;
-  --font-size-h1: 1rem;
-  --font-size-h1-lg: 1.1rem;
+  --line-height: 1.45;        /* Wysokość linii (1.45 × font-size) */
+  --font-size-base: 1rem;     /* Bazowy rozmiar tekstu: 16px */
+  --font-size-sm: 0.9rem;     /* Mniejszy tekst: ~14px */
+  --font-size-xs: 0.85em;     /* Jeszcze mniejszy: ~13px */
+  --font-size-h1: 1rem;       /* Tytuł H1 na mobile */
+  --font-size-h1-lg: 1.1rem;  /* Tytuł H1 na desktop */
 
-  /* Promienie / cienie */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* 
+    ─────────────────────────────────────────────────────────────────────────────
+    ZAOKRĄGLENIA I CIENIE
+    ─────────────────────────────────────────────────────────────────────────────
+  */
+  --radius-sm: 4px;           /* Małe zaokrąglenie (przyciski, inputy) */
+  --radius-md: 8px;           /* Średnie (karty na mobile) */
+  --radius-lg: 12px;          /* Duże (karty na desktop) */
+  
+  /* 
+    Cień karty:
+    0 6px 20px = offset-x offset-y blur-radius
+    rgba(0,0,0,0.06) = czarny z 6% przezroczystości (subtelny)
+  */
   --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.06);
 
-  /* Breakpointy (do media queries – wartości do min-width) */
-  /* 480px = małe tablety, 720px = desktop */
+  /* 
+    BREAKPOINTY (punkty przełamania dla responsywności)
+    480px = małe tablety, telefony w poziomie
+    720px = tablety, małe laptopy
+    
+    UWAGA: W CSS nie można używać zmiennych w @media queries,
+    więc te wartości są tu tylko jako komentarz/dokumentacja
+  */
 }
 
-/* ========== Baza (mobile) ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  STYLE BAZOWE - MOBILE FIRST
+  Te style są dla najmniejszych ekranów (telefony)
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 body {
-  margin: 0;
-  font-family: var(--font-family);
-  line-height: var(--line-height);
-  background: var(--color-bg);
-  color: var(--color-text);
+  margin: 0;                          /* Usuń domyślny margines przeglądarki */
+  font-family: var(--font-family);    /* Użyj naszego font stacka */
+  line-height: var(--line-height);    /* Wysokość linii dla czytelności */
+  background: var(--color-bg);        /* Tło strony */
+  color: var(--color-text);           /* Kolor tekstu */
 }
 
-/* ========== Header – mobile-first ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  HEADER (Nagłówek) - Mobile First
+  ═══════════════════════════════════════════════════════════════════════════════
+  
+  Na MOBILE: elementy ułożone pionowo (kolumna)
+  Na DESKTOP: elementy ułożone poziomo (wiersz)
+*/
 .header {
+  /* 
+    position: sticky = nagłówek "przykleja się" do góry ekranu przy scrollowaniu
+    top: 0 = przyklej na samej górze
+    z-index: 10 = nad innymi elementami (żeby nie było pod nimi)
+  */
   position: sticky;
   top: 0;
+  z-index: 10;
+  
   background: var(--color-header-bg);
   color: var(--color-header-text);
   padding: var(--space-md) var(--space-lg);
+  
+  /* 
+    Flexbox do układania elementów
+    flex-direction: column = elementy jeden pod drugim (mobile)
+  */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-md);
-  flex-wrap: wrap;
-  z-index: 10;
+  align-items: flex-start;      /* Wyrównaj do lewej */
+  gap: var(--space-md);         /* Odstęp między elementami */
+  flex-wrap: wrap;              /* Zawijaj jeśli się nie mieszczą */
 }
 
+/* Tytuł w nagłówku */
 .header__title {
   font-size: var(--font-size-h1);
-  margin: 0;
-  font-weight: 700;
+  margin: 0;                    /* Usuń domyślny margines H1 */
+  font-weight: 700;             /* Pogrubiony */
 }
 
+/* Nawigacja w nagłówku */
 .header__nav {
   display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-  width: 100%;
+  gap: var(--space-sm);         /* Odstęp między linkami */
+  flex-wrap: wrap;              /* Zawijaj linki jeśli się nie mieszczą */
+  width: 100%;                  /* Pełna szerokość na mobile */
 }
 
+/* Pojedynczy link nawigacji */
 .header__nav a {
   color: var(--color-header-text);
-  text-decoration: none;
-  opacity: 0.9;
+  text-decoration: none;        /* Usuń podkreślenie */
+  opacity: 0.9;                 /* Lekko przezroczysty (efekt hover jest jaśniejszy) */
   font-size: var(--font-size-sm);
   padding: var(--space-xs) var(--space-sm);
 }
 
+/* Aktywny link (aktualna strona) - dodawany przez JavaScript (router.js) */
 .header__nav a.active {
-  font-weight: 700;
-  text-decoration: underline;
+  font-weight: 700;             /* Pogrubiony */
+  text-decoration: underline;   /* Podkreślony */
 }
 
+/* 
+  DESKTOP STYLES dla nagłówka (ekrany >= 480px)
+  @media (min-width: 480px) = "jeśli szerokość ekranu >= 480px"
+*/
 @media (min-width: 480px) {
   .header {
-    flex-direction: row;
-    align-items: center;
+    flex-direction: row;        /* Zmień na układ poziomy */
+    align-items: center;        /* Wyśrodkuj pionowo */
     padding: var(--space-md) var(--space-lg);
   }
 
   .header__title {
-    font-size: var(--font-size-h1-lg);
+    font-size: var(--font-size-h1-lg);  /* Większy tytuł */
   }
 
   .header__nav {
-    width: auto;
-    gap: var(--space-md);
+    width: auto;                /* Nie pełna szerokość */
+    gap: var(--space-md);       /* Większy odstęp między linkami */
   }
 
   .header__nav a {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-base);  /* Większa czcionka */
     padding: var(--space-xs) var(--space-sm);
   }
 }
 
-/* ========== Banner offline – mobile-first ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  BANNER OFFLINE - Wyświetlany gdy brak internetu
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 .offline-banner {
-  background: var(--color-offline-bg);
+  background: var(--color-offline-bg);    /* Czerwone tło (uwaga!) */
   color: var(--color-offline-text);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-sm);
+  
+  /* Na mobile: kolumna */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -136,11 +240,12 @@ body {
   font-size: var(--font-size-xs);
 }
 
+/* Desktop: banner w jednej linii, po prawej stronie */
 @media (min-width: 600px) {
   .offline-banner {
-    flex-direction: row;
+    flex-direction: row;        /* Poziomo */
     align-items: center;
-    margin-left: auto;
+    margin-left: auto;          /* Przesuń na prawą stronę */
     margin-top: 0;
     width: auto;
     max-width: 100%;
@@ -151,31 +256,50 @@ body {
   }
 }
 
-/* ========== Main / App Shell ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  MAIN / APP SHELL - Główna zawartość strony
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 main {
-  max-width: 960px;
-  margin: var(--space-lg) auto;
-  padding: 0 var(--space-md);
+  max-width: 960px;             /* Maksymalna szerokość treści */
+  margin: var(--space-lg) auto; /* Wyśrodkuj poziomo (auto = równe marginesy) */
+  padding: 0 var(--space-md);   /* Padding boczny (żeby tekst nie dotykał krawędzi) */
 }
 
-/* Stan ładowania App Shell (przed wejściem routera) */
+/* 
+  Stan ładowania - pokazywany zanim JavaScript się załaduje
+  Zawiera spinner + tekst "Ładowanie..."
+*/
 .app-shell-loading {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 12rem;
+  align-items: center;          /* Wyśrodkuj poziomo */
+  justify-content: center;      /* Wyśrodkuj pionowo */
+  min-height: 12rem;            /* Minimalna wysokość */
   gap: var(--space-lg);
   padding: var(--space-xl);
 }
 
+/* 
+  SPINNER - kręcące się kółko
+  Zrobione z border (ramki) i animacji CSS
+*/
 .app-shell-spinner {
   display: block;
   width: 2.5rem;
   height: 2.5rem;
+  
+  /* 
+    Ramka: 3px solid szary, ale GÓRA jest niebieska
+    To daje efekt "częściowego kółka"
+  */
   border: 3px solid var(--color-border);
   border-top-color: var(--color-header-bg);
-  border-radius: 50%;
+  
+  border-radius: 50%;           /* Kółko (50% = idealne koło) */
+  
+  /* Animacja: obracaj w nieskończoność */
   animation: app-shell-spin 0.8s linear infinite;
 }
 
@@ -185,35 +309,50 @@ main {
   font-size: var(--font-size-sm);
 }
 
+/* 
+  Definicja animacji spinnera
+  @keyframes = definiuje "klatki" animacji
+  "to" = stan końcowy (100%)
+*/
 @keyframes app-shell-spin {
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg);  /* Obróć o 360° */
   }
 }
 
+/* Desktop: większy padding boczny */
 @media (min-width: 480px) {
   main {
     padding: 0 var(--space-lg);
   }
 }
 
-/* ========== Karty i błędy ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  KARTY (Cards) - Białe "pudełka" z cieniem
+  Używane do grupowania treści (formularze, listy)
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 .card {
   background: var(--color-card-bg);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card);     /* Subtelny cień daje efekt "uniesienia" */
   padding: var(--space-md);
   margin: var(--space-sm) 0;
 }
 
+/* Desktop: większe karty */
 @media (min-width: 480px) {
   .card {
     padding: var(--space-lg);
     margin: var(--space-md) 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-lg);  /* Większe zaokrąglenie */
   }
 }
 
+/* 
+  Error Box - Wyświetla błędy (czerwone tło)
+*/
 .errorBox {
   background: var(--color-error-bg);
   border: 1px solid var(--color-border-error);
@@ -223,51 +362,71 @@ main {
   margin: var(--space-lg) 0;
 }
 
+/* Błąd na liście (mniejszy tekst) */
 .list-error {
   color: var(--color-error-text);
   font-size: var(--font-size-xs);
 }
 
-/* ========== Wspólne formularze (.app-form) – mobile-first ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  FORMULARZE (.app-form) - Wspólne style dla wszystkich formularzy
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 .app-form {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;       /* Pola jedno pod drugim */
   align-items: flex-start;
-  gap: 12px;
+  gap: 12px;                    /* Odstęp między polami */
 }
 
+/* Label z inputem w środku */
 .app-form label {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;       /* Tekst nad inputem */
   width: 100%;
   gap: var(--space-xs);
 }
 
+/* Pola input */
 .app-form input {
   width: 100%;
   padding: var(--space-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  font-size: 16px; /* 16px zapobiega zoomowi na iOS */
+  
+  /* 
+    WAŻNE: font-size: 16px zapobiega auto-zoomowi na iOS
+    iOS automatycznie zoomuje gdy input ma font < 16px
+  */
+  font-size: 16px;
+  
+  /* 
+    box-sizing: border-box = szerokość ZAWIERA padding i border
+    Bez tego width: 100% + padding by wychodziło poza kontener
+  */
   box-sizing: border-box;
 }
 
+/* Przycisk w formularzu */
 .app-form .btn {
   background-color: var(--color-btn);
-  border: 0;
+  border: 0;                    /* Usuń domyślną ramkę */
   padding: 10px 20px;
   color: var(--color-btn-text);
-  font-weight: 600;
+  font-weight: 600;             /* Pogrubiony tekst */
   border-radius: var(--radius-sm);
-  cursor: pointer;
+  cursor: pointer;              /* Kursor "łapka" */
   margin-top: var(--space-xs);
 }
 
+/* Przycisk wyłączony (disabled) */
 .app-form .btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  opacity: 0.6;                 /* Przygaszony */
+  cursor: not-allowed;          /* Kursor "zakaz" */
 }
 
+/* Przycisk "Pobierz lokalizację" */
 .btn-location {
   padding: var(--space-md) 12px;
   background-color: var(--color-btn);
@@ -275,29 +434,31 @@ main {
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  white-space: nowrap;
+  white-space: nowrap;          /* Nie zawijaj tekstu */
   font-size: var(--font-size-sm);
-  width: 100%;
+  width: 100%;                  /* Na mobile: pełna szerokość */
 }
 
 @media (min-width: 480px) {
   .btn-location {
-    width: auto;
+    width: auto;                /* Na desktop: auto szerokość */
   }
 }
 
+/* Komunikaty formularza (sukces/błąd) */
 .form-msg {
   margin-top: var(--space-lg);
 }
 
 .form-msg-success {
-  color: var(--color-success);
+  color: var(--color-success);  /* Zielony */
 }
 
 .form-msg-error {
-  color: var(--color-error-text);
+  color: var(--color-error-text); /* Czerwony */
 }
 
+/* Wiersz z inputem lokalizacji + przyciskiem */
 .location-input-row {
   display: flex;
   gap: var(--space-md);
@@ -305,32 +466,40 @@ main {
 }
 
 .location-input-row .location-input {
-  flex: 1;
+  flex: 1;                      /* Rozciągnij input (przycisk ma stałą szerokość) */
 }
 
-/* ========== Layout feature (pomiary / posiłki) – mobile-first ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  LAYOUT FEATURE (Pomiary/Posiłki) - Układ z formularzem i listą
+  ═══════════════════════════════════════════════════════════════════════════════
+  
+  MOBILE: Formularz i lista pod sobą (kolumna)
+  DESKTOP: Formularz po lewej, lista po prawej (wiersz)
+*/
 .feature-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;       /* Mobile: kolumna */
   align-items: stretch;
   gap: var(--space-xl);
 }
 
 .feature-form-col,
 .feature-list-col {
-  width: 100%;
+  width: 100%;                  /* Mobile: pełna szerokość */
 }
 
+/* Desktop: dwie kolumny obok siebie */
 @media (min-width: 720px) {
   .feature-layout {
-    flex-direction: row;
+    flex-direction: row;        /* Zmień na wiersz */
     align-items: flex-start;
     justify-content: space-between;
     gap: 32px;
   }
 
   .feature-form-col {
-    flex: 3;
+    flex: 3;                    /* Proporcja 3:4 */
   }
 
   .feature-list-col {
@@ -338,46 +507,66 @@ main {
   }
 }
 
-/* ========== Siatka (dashboard) ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  GRID (Siatka) - Dashboard
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 @media (min-width: 720px) {
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;   /* Dwie równe kolumny */
     gap: var(--space-lg);
   }
 }
 
-/* ========== Sekcja i listy ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  SEKCJE I LISTY
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
+
+/* Div bezpośrednio w sekcji - układ elementów */
 section > div {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;       /* Mobile: kolumna */
   gap: var(--space-lg);
 }
 
+/* Desktop: siatka responsywna */
 @media (min-width: 720px) {
   section > div {
     display: grid;
+    /* 
+      repeat(auto-fit, minmax(250px, 1fr)) = 
+      "Tyle kolumn ile się zmieści, każda min 250px, max równe części"
+      auto-fit = automatycznie dopasuj liczbę kolumn
+    */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-lg);
   }
 }
 
+/* Listy bez domyślnych stylów */
 ul {
-  list-style: none;
+  list-style: none;             /* Usuń kropki */
   padding: 0;
   margin: 0;
 }
 
+/* Element listy */
 ul li {
   padding: var(--space-sm) 0;
-  border-bottom: 1px solid var(--color-list-border);
+  border-bottom: 1px solid var(--color-list-border);  /* Linia oddzielająca */
   font-size: var(--font-size-sm);
 }
 
+/* Ostatni element bez linii na dole */
 ul li:last-child {
   border-bottom: none;
 }
 
+/* Desktop: większy padding i czcionka */
 @media (min-width: 480px) {
   ul li {
     padding: var(--space-md) 0;
@@ -385,24 +574,33 @@ ul li:last-child {
   }
 }
 
+/* Obrazki w listach - responsywne */
 ul li img {
-  max-width: 100%;
-  height: auto;
+  max-width: 100%;              /* Nie większe niż kontener */
+  height: auto;                 /* Zachowaj proporcje */
 }
 
-/* ========== Posiłki – element listy ========== */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  POSIŁKI - Element listy ze zdjęciem i opisem
+  ═══════════════════════════════════════════════════════════════════════════════
+  
+  MOBILE: Zdjęcie nad opisem (kolumna)
+  DESKTOP: Zdjęcie obok opisu (wiersz)
+*/
 .meal-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;       /* Mobile: kolumna */
   gap: var(--space-md);
   align-items: flex-start;
 }
 
+/* Zdjęcie posiłku */
 .meal-item-img {
-  width: 100%;
+  width: 100%;                  /* Mobile: pełna szerokość */
   height: auto;
   max-height: 200px;
-  object-fit: cover;
+  object-fit: cover;            /* Przytnij zachowując proporcje */
   border-radius: var(--radius-sm);
 }
 
@@ -411,36 +609,44 @@ ul li img {
   width: 100%;
 }
 
+/* Makroskładniki (B/W/T) */
 .meal-item-macros {
   font-size: var(--font-size-sm);
   color: var(--color-muted);
   margin-top: var(--space-xs);
 }
 
+/* Notatka */
 .meal-item-note {
   font-size: var(--font-size-xs);
   color: var(--color-muted-light);
   margin-top: var(--space-xs);
 }
 
+/* Desktop: zdjęcie obok tekstu */
 @media (min-width: 480px) {
   .meal-item {
-    flex-direction: row;
+    flex-direction: row;        /* Zmień na wiersz */
     gap: var(--space-xl);
   }
 
   .meal-item-img {
-    width: 80px;
+    width: 80px;                /* Stała szerokość */
     height: 80px;
     max-height: none;
   }
 }
 
-/* Strona 404 */
+/* 
+  ═══════════════════════════════════════════════════════════════════════════════
+  STRONA 404 - Nie znaleziono
+  ═══════════════════════════════════════════════════════════════════════════════
+*/
 .page-404 {
   text-align: center;
   padding: var(--space-xl);
 }
+
 .page-404 h2 {
   margin: 0 0 var(--space-lg);
   color: var(--color-text);

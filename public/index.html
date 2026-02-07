@@ -1,43 +1,150 @@
 <!DOCTYPE html>
 <html lang="pl">
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════════╗
+  ║  PLIK: public/index.html                                                     ║
+  ║  CO ROBI: Główna strona HTML aplikacji - "szkielet" całej apki               ║
+  ╚══════════════════════════════════════════════════════════════════════════════╝
+  
+  TO JEST APLIKACJA SPA (Single Page Application):
+  - Jest tylko JEDEN plik HTML
+  - JavaScript (router) dynamicznie zmienia zawartość <main id="app">
+  - Nawigacja przez hash URL (#/measurements, #/nutrition)
+  - Strona NIE przeładowuje się przy zmianie "podstrony"
+  
+  STRUKTURA STRONY:
+  ┌─────────────────────────────────────────┐
+  │ <header>                                │
+  │   Logo + Nawigacja + Banner offline     │
+  ├─────────────────────────────────────────┤
+  │ <main id="app">                         │
+  │   Tu JavaScript wstawia treść stron     │
+  │   (dashboard, pomiary, posiłki)         │
+  └─────────────────────────────────────────┘
+-->
   <head>
+    <!-- Kodowanie znaków UTF-8 (polskie litery) -->
     <meta charset="utf-8" />
+    
+    <!-- 
+      VIEWPORT - responsywność na telefonach
+      width=device-width = szerokość = szerokość ekranu urządzenia
+      initial-scale=1 = początkowy zoom 100%
+      viewport-fit=cover = wypełnij cały ekran (dla iPhone z notchem)
+    -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    
+    <!-- 
+      ═══════════════════════════════════════════════════════════════════════════
+      META TAGI DLA PWA (Progressive Web App)
+      Pozwalają "zainstalować" stronę jak aplikację na telefonie
+      ═══════════════════════════════════════════════════════════════════════════
+    -->
+    
+    <!-- Kolor paska adresu w przeglądarce mobilnej -->
     <meta name="theme-color" content="#005b96" />
+    
+    <!-- iOS Safari - pozwól działać jako aplikacja (fullscreen) -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!-- iOS - styl paska statusu (domyślny = czarny tekst na białym tle) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    
+    <!-- iOS - nazwa aplikacji po dodaniu do ekranu głównego -->
     <meta name="apple-mobile-web-app-title" content="PerfectHealth" />
+    
+    <!-- 
+      MANIFEST - plik JSON z konfiguracją PWA
+      Zawiera: nazwę, ikony, kolory, tryb wyświetlania
+      Dzięki niemu przeglądarka wie, że to PWA i oferuje "Dodaj do ekranu głównego"
+    -->
     <link rel="manifest" href="/manifest.webmanifest" />
+    
+    <!-- Ikony aplikacji (różne rozmiary dla różnych urządzeń) -->
     <link rel="icon" href="/icons/icon-192.png" sizes="192x192" />
     <link rel="icon" href="/icons/icon-512.png" sizes="512x512" />
+    
+    <!-- Ikona dla iOS (dodaj do ekranu głównego) -->
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    
+    <!-- Arkusz stylów CSS -->
     <link rel="stylesheet" href="styles.css" />
+    
     <title>PerfectHealth</title>
   </head>
   <body>
+    <!-- 
+      ═══════════════════════════════════════════════════════════════════════════
+      HEADER - Nagłówek strony (zawsze widoczny)
+      ═══════════════════════════════════════════════════════════════════════════
+    -->
     <header class="header">
+      <!-- Logo/tytuł aplikacji -->
       <h1 class="header__title">PerfectHealth</h1>
+      
+      <!-- 
+        NAWIGACJA
+        - href="#/" = hash routing (zmiana hash w URL)
+        - data-route = atrybut używany przez router.js do oznaczania aktywnego linku
+        - Kliknięcie zmienia location.hash, router nasłuchuje i zmienia widok
+      -->
       <nav class="header__nav">
         <a href="#/" data-route>Dashboard</a>
         <a href="#/measurements" data-route>Pomiary</a>
         <a href="#/nutrition" data-route>Żywienie & Trening</a>
       </nav>
+      
+      <!-- 
+        BANNER OFFLINE
+        - hidden = domyślnie ukryty (atrybut HTML)
+        - JavaScript (main.js) pokazuje/ukrywa w zależności od navigator.onLine
+        - Informuje użytkownika, że działa w trybie offline
+      -->
       <div id="offline-banner" class="offline-banner" hidden>
         <span>📴 Tryb offline</span>
         <span class="offline-banner-desc">Aplikacja działa lokalnie. Dane są zapisywane i będą zsynchronizowane po powrocie połączenia.</span>
       </div>
     </header>
 
+    <!-- 
+      ═══════════════════════════════════════════════════════════════════════════
+      MAIN - Główna zawartość (zmieniana przez router)
+      ═══════════════════════════════════════════════════════════════════════════
+      
+      id="app" - JavaScript (router.js) wstawia tu treść aktualnej strony
+      role="main" - accessibility (czytniki ekranu wiedzą, że to główna treść)
+      aria-live="polite" - czytniki ekranu ogłoszą zmiany treści
+    -->
     <main id="app" class="app-shell" role="main" aria-live="polite">
+      <!-- 
+        LOADING STATE - Pokazywany przed załadowaniem JavaScriptu
+        Router podmieni to na właściwą treść gdy się załaduje
+      -->
       <div class="app-shell-loading" aria-hidden="false">
+        <!-- Kręcący się spinner (animacja CSS) -->
         <span class="app-shell-spinner" aria-hidden="true"></span>
         <p class="app-shell-text">Ładowanie aplikacji…</p>
       </div>
     </main>
 
+    <!-- 
+      ═══════════════════════════════════════════════════════════════════════════
+      GŁÓWNY SKRYPT JAVASCRIPT
+      ═══════════════════════════════════════════════════════════════════════════
+      
+      type="module" = moduł ES6 (obsługuje import/export)
+      src="src/main.js" = punkt wejścia aplikacji
+      
+      Kolejność ładowania:
+      1. Przeglądarka parsuje HTML
+      2. Ładuje CSS (blokuje rendering)
+      3. Ładuje main.js jako moduł
+      4. main.js importuje inne moduły
+      5. Uruchamia się router i wyświetla dashboard
+    -->
     <script type="module" src="src/main.js"></script>
   </body>
 </html>
